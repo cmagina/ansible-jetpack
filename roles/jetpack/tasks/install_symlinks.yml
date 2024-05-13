@@ -1,0 +1,11 @@
+---
+- name: Create symlink directory {{ symlink.link | dirname }}
+  ansible.builtin.file:
+    path: "{{ symlink.link | dirname }}"
+    state: directory
+
+- name: Installing symlink for {{ symlink.target }}
+  ansible.builtin.file:
+    src: "{{ symlink.target }}"
+    dest: "{{ symlink.link }}"
+    state: link

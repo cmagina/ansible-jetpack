@@ -1,0 +1,11 @@
+---
+- name: Create destination directory {{ dir.dest }}
+  ansible.builtin.file:
+    path: "{{ dir.dest }}"
+    state: directory
+
+- name: Install directory {{ dir.src }}
+  ansible.builtin.copy:
+    src: "{{ jetpack_work_path }}/{{ package }}/{{ dir.src }}"
+    dest: "{{ dir.dest }}"
+    remote_src: true

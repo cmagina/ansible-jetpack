@@ -1,0 +1,107 @@
+---
+- name: Check if running on Ubuntu 20.04 or 22.04 for full flash
+  ansible.builtin.assert:
+    that:
+      - ansible_distribution == "Ubuntu"
+      - ansible_distribution_version is version('20.04', '==') or ansible_distribution_version is version('22.04', '==')
+    fail_msg: "Only Ubuntu 20.04 or 22.04 are supported for full flash"
+  when:
+    - jetpack_flash_type == "full"
+
+- name: Install flash dependencies - Fedora
+  become: true
+  ansible.builtin.dnf:
+    name:
+      - binutils
+      - dtc
+      - lz4
+      - qemu-user-binfmt
+      - qemu-user-static-aarch64
+      - usbutils
+    state: present
+  when:
+    - ansible_distribution == 'Fedora'
+    - ansible_facts.pkg_mgr == 'dnf'
+
+- name: Install flash dependencies - Ubuntu
+  become: true
+  ansible.builtin.apt:
+    name:
+      - lbzip2
+    state: present
+  when:
+    - ansible_distribution == 'Ubuntu'
+    - ansible_facts.pkg_mgr == 'apt'
+
+- name: Setting the jetpack work directory path
+  when:
+    - jetpack_work_path is undefined
+  block:
+    - name: Creating a temporary jetpack work directory
+      ansible.builtin.tempfile:
+        state: directory
+        suffix: -jetpack-work
+      register: jetpack_work_tempdir
+
+    - name: Setting jetpack_work_path variable
+      ansible.builtin.set_fact:
+        jetpack_work_path: "{{ jetpack_work_tempdir.path }}"
+
+- name: Creating the jetpack work directory
+  ansible.builtin.file:
+    path: "{{ jetpack_work_path }}"
+    mode: "0755"
+    state: directory
+
+- name: Extracting the jetpack driver package
+  ansible.builtin.unarchive:
+    src: "{{ jetpack_cfg.driver_package }}"
+    dest: "{{ jetpack_work_path }}"
+    creates: "{{ jetpack_work_path }}/Linux_for_Tegra"
+    remote_src: true
+  when:
+    - extract_jetpack_driver_package
+
+- name: Setup the jetpack driver scripts
+  when:
+    - extract_jetpack_driver_package
+  block:
+    - name: Updating the jetpack driver boardctl script to use python3
+      ansible.builtin.lineinfile:
+        regexp: "#! /usr/bin/env python2"
+        line: "#! /usr/bin/env python3"
+        path: "{{ jetpack_work_path }}/Linux_for_Tegra/tools/board_automation/boardctl"
+
+    - name: Updating the jetpack driver flash script to use python3
+      ansible.builtin.replace:
+        path: "{{ jetpack_work_path }}/Linux_for_Tegra/flash.sh"
+        regexp: "python "
+        replace: "python3 "
+
+- name: Setup L4T for a full flash
+  become: true
+  block:
+    - name: Extract the jetpack driver rootfs
+      ansible.builtin.unarchive:
+        src: "{{ jetpack_cfg.driver_rootfs }}"
+        dest: "{{ jetpack_work_path }}/Linux_for_Tegra/rootfs"
+        creates: "{{ jetpack_work_path }}/Linux_for_Tegra/rootfs/etc/nv_tegra_release"
+        remote_src: true
+      when:
+        - extract_jetpack_driver_rootfs
+
+    - name: Install software prerequisites
+      ansible.builtin.command:
+        cmd: ./tools/l4t_flash_prerequisites.sh
+      args:
+        chdir: "{{ jetpack_work_path }}/Linux_for_Tegra"
+
+    - name: Setup the jetpack driver rootfs
+      ansible.builtin.command:
+        cmd: sudo ./apply_binaries.sh
+      args:
+        chdir: "{{ jetpack_work_path }}/Linux_for_Tegra"
+  when:
+    - jetpack_flash_type == "full"
+    - ansible_distribution == "Ubuntu"
+    - ansible_distribution_version is version('20.04', '==') or ansible_distribution_version is version('22.04', '==')

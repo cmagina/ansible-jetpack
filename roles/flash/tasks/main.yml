@@ -1,0 +1,34 @@
+---
+- name: Load the plaform config
+  block:
+    - name: Include default vars for the platform
+      ansible.builtin.include_vars:
+        dir: "{{ jetpack_platform }}/{{ jetpack_platform_module }}"
+        files_matching: "main.yml"
+
+    - name: Include vars for the platform submodule
+      ansible.builtin.include_vars:
+        dirs: "{{ jetpack_platform }}/{{ jetpack_platform_module }}"
+        files_matching: "{{ jetpack_platform_module_type }}.yml"
+      when:
+        - jetpack_platform_module_type is defined
+
+- name: Setup the flash host
+  ansible.builtin.include_tasks:
+    file: setup.yml
+  when:
+    - setup_flash_host
+
+- name: Flash the jetson
+  ansible.builtin.include_tasks:
+    file: flash.yml
+  when:
+    - flash_jetson
+
+- name: Cleanup temporary workdir
+  become: true
+  ansible.builtin.file:
+    path: "{{ jetpack_work_tempdir }}"
+    state: absent
+  when:
+    - jetpack_work_tempdir is defined

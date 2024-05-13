@@ -1,0 +1,5 @@
+build_jetpack_kmods: true
+build_jetpack_nvethernetrm: true
+install_jetpack_kmods: true
+install_jetpack_userspace: true
+install_nvidia_container_toolkit: true

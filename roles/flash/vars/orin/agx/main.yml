@@ -1,0 +1,12 @@
+---
+jetpack_boardctl_target: topo
+jetpack_usb_recovery_id: 7023
+jetpack_serial_device_id: 7045
+
+jetpack_flash:
+  full:
+    target_board: jetson-agx-orin-devkit
+    rootdev: internal
+  boot:
+    target_board: p3737-0000-p3701-0000-qspi
+    rootdev: external

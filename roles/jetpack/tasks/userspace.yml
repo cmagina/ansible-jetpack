@@ -1,0 +1,79 @@
+---
+- name: Include common vars for packages
+  ansible.builtin.include_vars:
+    dir: "vars/"
+    files_matching: "userspace.yml"
+
+- name: Include packages vars for the jetpack_software_version
+  ansible.builtin.include_vars:
+    dir: "vars/{{ jetpack_software_version }}"
+    files_matching: "userspace.yml"
+
+- name: Install userspace install dependencies
+  become: true
+  ansible.builtin.dnf:
+    name: "{{ jetpack_userspace_deps.build }}"
+    state: present
+  when:
+    - ansible_distribution == 'RedHat'
+    - ansible_facts.pkg_mgr == 'dnf'
+
+- name: Setting the jetpack work directory path
+  when:
+    - jetpack_work_path is undefined
+  block:
+    - name: Creating a temporary jetpack work directory
+      ansible.builtin.tempfile:
+        state: directory
+        suffix: -jetpack-work
+      register: jetpack_work_tempdir
+
+    - name: Setting jetpack_work_path variable
+      ansible.builtin.set_fact:
+        jetpack_work_path: "{{ jetpack_work_tempdir.path }}"
+
+- name: Creating the jetpack work directory
+  ansible.builtin.file:
+    path: "{{ jetpack_work_path }}"
+    mode: "0755"
+    state: directory
+
+- name: Install the jetpack deb packages
+  include_tasks: extract_deb_to_filesystem.yml
+  loop: "{{ jetpack_userspace_package_list }}"
+  loop_control:
+    loop_var: package
+
+- name: Install userspace runtime dependencies
+  become: true
+  ansible.builtin.dnf:
+    name: "{{ jetpack_userspace_deps.system }}"
+    state: present
+  when:
+    - ansible_distribution == 'RedHat'
+    - ansible_facts.pkg_mgr == 'dnf'
+
+- name: Update library cache
+  ansible.builtin.command:
+    cmd: /sbin/ldconfig
+
+- name: Cleanup the jetpack work directory
+  ansible.builtin.file:
+    path: "{{ jetpack_work_path }}"
+    state: absent
+
+- name: Add system users to the video group
+  ansible.builtin.user:
+    name: "{{ item }}"
+    append: true
+    groups:
+      - video
+  loop: "{{ jetpack_userspace_system_users }}"
+
+- name: Add additional specified users to the video group
+  ansible.builtin.user:
+    name: "{{ item }}"
+    append: true
+    groups:
+      - video
+  loop: "{{ additional_jetpack_users }}"

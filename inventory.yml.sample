@@ -1,0 +1,21 @@
+flash_hosts:
+  hosts:
+    x86_host:
+      ## flash config
+      jetpack_platform_module: <agx | nx | nano>
+      # jetpack_platform_module_type: <32g | 16G | 8g | 4g | industrial> # leave unset for default (i.e. 64g agx)
+      # jetpack_flash_type: <full | boot > # boot is the default
+      # optional target path to extract the jetpack packages to, uses a tempdir by default
+      # jetpack_work_path: /path/to/workdir
+
+jetsons:
+  hosts:
+    agxorin:
+      ## adds each user to the video group
+      # additional_jetpack_users:
+      #  - test
+
+all:
+  vars:
+    ## target jetpack release
+    jetpack_software_release: 36.3.0

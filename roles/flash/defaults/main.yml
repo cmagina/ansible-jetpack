@@ -1,0 +1,9 @@
+---
+jetpack_platform: orin
+jetpack_platform_flash_type: qspi
+
+setup_flash_host: true
+install_flash_dependencies: false
+extract_jetpack_driver_package: true
+extract_jetpack_driver_rootfs: true
+flash_jetson: true

@@ -1,0 +1,25 @@
+jetpack_kmod_build_deps:
+  - g++
+  - gcc
+  - git
+  - kernel-devel
+  - make
+
+jetpack_kmod_src_path: /usr/src/nvidia
+
+jetpack_kmod_git_repos:
+  - url: git://nv-tegra.nvidia.com/linux-nvgpu.git
+    path: nvgpu
+  - url: git://nv-tegra.nvidia.com/linux-nv-oot.git
+    path: nvidia-oot
+  - url: git://nv-tegra.nvidia.com/linux-hwpm.git
+    path: hwpm
+  - url: git://nv-tegra.nvidia.com/kernel/nvethernetrm.git
+    path: nvethernetrm
+  - url: git://nv-tegra.nvidia.com/tegra/kernel-src/nv-kernel-display-driver.git
+    path: nvdisplay
+
+jetpack_kmod_confs:
+  modprobe_blacklist: /etc/modprobe.d/nvidia-jetson.conf
+  modules_load: /etc/modules-load.d/nvidia-jetson.conf
+  dracut_omit: /etc/dracut.conf.d/omit-jetson.conf

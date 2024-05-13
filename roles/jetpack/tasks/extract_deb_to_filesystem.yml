@@ -1,0 +1,80 @@
+---
+- name: Include vars for the package
+  ansible.builtin.include_vars:
+    dir: "vars/{{ jetpack_software_version }}/packages"
+    files_matching: "{{ package }}.yml"
+    name: package_cfg
+
+- name: Creating the {{ package }} workdir
+  file:
+    path: "{{ jetpack_work_path }}/{{ package }}"
+    mode: 0755
+    state: directory
+
+- name: Set filename fact for {{ package }}
+  ansible.builtin.set_fact:
+    filename: "{{ package }}_{{ jetpack_software_version }}-{{ jetpack_userspace_build_timestamp }}_arm64.deb"
+
+- name: Downloading {{ package }}
+  ansible.builtin.get_url:
+    url: "{{ jetpack_userspace_repo_url.head }}/{{ package_cfg.repo_url.platform }}/{{ jetpack_userspace_repo_url.tail }}/{{ package }}/{{ filename }}"
+    dest: "{{ jetpack_work_path }}/{{ package }}/"
+
+- name: Getting the name of the data archive from the {{ package }}
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      ar -t {{ jetpack_work_path }}/{{ package }}/{{ filename }} | grep data.tar
+    executable: /bin/bash
+  register: data_archive_filename
+
+- name: Extracting {{ data_archive_filename.stdout }} from {{ package }}
+  ansible.builtin.command:
+    cmd: ar x --output="{{ jetpack_work_path }}/{{ package }}" {{ jetpack_work_path }}/{{ package }}/{{ filename }} {{ data_archive_filename.stdout }}
+
+- name: Extracting {{ package }}'s {{ data_archive_filename.stdout }}
+  ansible.builtin.unarchive:
+    src: "{{ jetpack_work_path }}/{{ package }}/{{ data_archive_filename.stdout }}"
+    dest: "{{ jetpack_work_path }}/{{ package }}/"
+    remote_src: true
+
+- name: Installing {{ package }}
+  block:
+    - name: Installing directories from {{ package }}
+      ansible.builtin.include_tasks: install_dirs.yml
+      loop: "{{ package_cfg.directories }}"
+      loop_control:
+        loop_var: dir
+      when: package_cfg.directories is defined
+
+    - name: Installing files from {{ package }}
+      ansible.builtin.include_tasks: install_files.yml
+      loop: "{{ package_cfg.files }}"
+      loop_control:
+        loop_var: file_glob
+      when: package_cfg.files is defined
+
+    - name: Install symlinks for {{ package }}
+      ansible.builtin.include_tasks: install_symlinks.yml
+      loop: "{{ package_cfg.symlinks }}"
+      loop_control:
+        loop_var: symlink
+      when: package_cfg.symlinks is defined
+
+    - name: Replace line in files from {{ package }}
+      ansible.builtin.include_tasks: regex_files.yml
+      loop: "{{ package_cfg.updates }}"
+      when: package_cfg.updates is defined
+
+    - name: Enable services and ensure they are not masked for {{ package }}
+      ansible.builtin.systemd_service:
+        name: "{{ item }}"
+        enabled: true
+        masked: no
+      loop: "{{ package_cfg.services }}"
+      when: package_cfg.services is defined
+
+- name: Cleanup work directory for {{ package }}
+  ansible.builtin.file:
+    path: "{{ jetpack_work_path }}/{{ package }}"
+    state: absent

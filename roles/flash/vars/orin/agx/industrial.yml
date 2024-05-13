@@ -1,0 +1,8 @@
+---
+jetpack_flash:
+  full:
+    target_board: jetson-agx-orin-devkit-industrial
+    rootdev: internal
+  boot:
+    target_board: jetson-agx-orin-devkit-industrial-qspi
+    rootdev: external

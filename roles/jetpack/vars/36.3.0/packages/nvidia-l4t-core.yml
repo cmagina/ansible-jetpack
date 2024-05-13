@@ -1,0 +1,47 @@
+---
+repo_url:
+  platform: t234
+
+files:
+  - src: etc/ld.so.conf.d/nvidia-tegra.conf
+    dest: /etc/ld.so.conf.d/nvidia-tegra.conf
+  - src: etc/nv_tegra_release
+    dest: /etc/nv_tegra_release
+  - src: usr/lib/aarch64-linux-gnu/nvidia/ld.so.conf
+    dest: /usr/lib64/nvidia/ld.so.conf
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libjetsonpower.so
+    dest: /usr/lib64/nvidia/libjetsonpower.so
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libnvidia-rmapi-tegra.so.540.3.0
+    dest: /usr/lib64/nvidia/libnvidia-rmapi-tegra.so.540.3.0
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libnvidia-tls.so.540.3.0
+    dest: /usr/lib64/nvidia/libnvidia-tls.so.540.3.0
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libnv*.so
+    dest: /usr/lib64/nvidia/
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libsensors*.so
+    dest: /usr/lib64/nvidia/
+  - src: usr/lib/python3/dist-packages/pylibjetsonpower/__init__.py
+    dest: /usr/lib64/python3.9/site-packages/pylibjetsonpower/__init__.py
+  - src: usr/sbin/nvphsd
+    dest: /usr/sbin/nvphsd
+    mode: '0750'
+  - src: usr/share/doc/nvidia-tegra/LICENSE.libnvidia-rmapi-tegra
+    dest: /usr/share/doc/nvidia-tegra/LICENSE.libnvidia-rmapi-tegra
+  - src: usr/share/doc/nvidia-tegra/LICENSE.tegra_sensors
+    dest: /usr/share/doc/nvidia-tegra/LICENSE.tegra_sensors
+  - src: usr/share/doc/nvidia-tegra/Tegra_Software_License_Agreement-Tegra-Linux.txt.gz
+    dest: /usr/share/doc/nvidia-tegra/Tegra_Software_License_Agreement-Tegra-Linux.txt.gz
+
+symlinks:
+  - target: /usr/lib64/nvidia
+    link: /usr/lib64/tegra
+
+updates:
+  - path: /etc/ld.so.conf.d/nvidia-tegra.conf
+    regex: (^.*)lib/aarch64-linux-gnu(.*$)
+    replace: \1lib64\2
+  - path: /etc/nv_tegra_release
+    regex: (^.*)lib/aarch64-linux-gnu(.*$)
+    replace: \1lib64\2
+  - path: /usr/lib64/nvidia/ld.so.conf
+    regex: (^.*)lib/aarch64-linux-gnu(.*$)
+    replace: \1lib64\2

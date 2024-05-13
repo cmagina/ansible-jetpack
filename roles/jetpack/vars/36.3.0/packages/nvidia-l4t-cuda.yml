@@ -1,0 +1,23 @@
+---
+repo_url:
+  platform: t234
+
+files:
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libcuda.so.1.1
+    dest: /usr/lib64/nvidia/libcuda.so.1.1
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libnvcucompat.so
+    dest: /usr/lib64/nvidia/libnvcucompat.so
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libnvcudla.so
+    dest: /usr/lib64/nvidia/libnvcudla.so
+
+symlinks:
+  - target: /usr/lib64/nvidia/libcuda.so.1.1
+    link: /usr/lib64/nvidia/libcuda.so
+  - target: /usr/lib64/nvidia/libcuda.so.1.1
+    link: /usr/lib64/nvidia/libcuda.so.1
+  - target: /usr/lib64/nvidia/libcuda.so
+    link: /usr/lib64/libcuda.so
+  - target: /usr/lib64/nvidia/libnvcucompat.so
+    link: /usr/lib64/libnvcucompat.so
+  - target: /usr/lib64/nvidia/libnvcudla.so
+    link: /usr/lib64/libnvcudla.so

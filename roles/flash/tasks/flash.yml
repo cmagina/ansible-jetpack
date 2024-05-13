@@ -1,0 +1,53 @@
+---
+- name: Putting the system into recovery mode
+  become: true
+  ansible.builtin.command:
+    cmd: ./tools/board_automation/boardctl -t {{ jetpack_boardctl_target }} recovery
+  args:
+    chdir: "{{ jetpack_work_path }}/Linux_for_Tegra"
+  register: boardctl_output
+  changed_when: boardctl_output.rc != 0
+  when:
+    - jetpack_boardctl_target is defined
+
+- name: Check for the NVIDIA USB device
+  ansible.builtin.shell:
+    cmd: lsusb | grep "ID 0955:{{ jetpack_usb_recovery_id }} NVIDIA Corp."
+  register: nvidia_usb_dev_check
+  ignore_errors: true
+
+- name: Put the jetpack into recovery mode manually
+  when:
+    - nvidia_usb_dev_check.stdout|length == 0
+  block:
+    - name: "Put the jetpack into recovery manually ..."
+      ansible.builtin.pause:
+
+    - name: Check for the NVIDIA USB device
+      ansible.builtin.shell:
+        cmd: lsusb | grep "ID 0955:{{ jetpack_usb_recovery_id }} NVIDIA Corp."
+      register: nvidia_usb_dev_manual_check
+      ignore_errors: true
+
+    - name: Verify the NVIDIA USB device
+      ansible.builtin.meta: end_play
+      when:
+        - nvidia_usb_dev_manual_check.stdout|length == 0
+
+- name: Flash the module
+  block:
+    - name: "Ready to flash, press any key to continue ..."
+      ansible.builtin.pause:
+
+    - name: Flash the module
+      become: true
+      ansible.builtin.command:
+        cmd: ./flash.sh {{ jetpack_flash[jetpack_flash_type].target_board }} {{ jetpack_flash[jetpack_flash_type].rootdev }}
+      args:
+        chdir: "{{ jetpack_work_path }}/Linux_for_Tegra"
+      register: flash_command_output
+
+    - ansible.builtin.assert:
+        that: flash_command_output.stdout_lines is search('The target .* has been flashed successfully.')
+        fail_msg: "Failed to flash the module"
+        success_msg: "Successfully flashed the module"

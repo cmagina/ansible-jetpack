@@ -1,0 +1,15 @@
+---
+repo_url:
+  platform: t234
+
+files:
+  - src: etc/nvpower/nvfancontrol/nvfancontrol_*.conf
+    dest: /etc/nvpower/nvfancontrol/
+  - src: etc/systemd/system/nvfancontrol.service
+    dest: /usr/lib/systemd/system/nvfancontrol.service
+  - src: usr/sbin/nvfancontrol
+    dest: /usr/sbin/nvfancontrol
+    mode: '0750'
+
+services:
+  - nvfancontrol

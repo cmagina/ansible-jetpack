@@ -1,0 +1,36 @@
+---
+- name: Include common vars for container
+  ansible.builtin.include_vars:
+    dir: "vars/"
+    files_matching: "container.yml"
+
+- name: Install the nvidia-container-toolkit repository
+  ansible.builtin.get_url:
+    url: "{{ jetpack_container_toolkit_repo_url_file }}"
+    dest: /etc/yum.repos.d/nvidia-container-toolkit.repo
+    mode: "0644"
+
+- name: Install the nvidia-container-toolkit software - RHEL
+  ansible.builtin.dnf:
+    name:
+      - nvidia-container-toolkit-base
+    state: present
+  when:
+    - ansible_distribution == 'RedHat'
+    - ansible_facts.pkg_mgr == 'dnf'
+
+- name: Create the container device interface storage directory
+  ansible.builtin.file:
+    path: /etc/cdi
+    state: directory
+
+- name: Install the nvidia-ctk service to generate a cdi file on boot
+  ansible.builtin.copy:
+    src: files/nvidia-ctk.service
+    dest: /usr/lib/systemd/system/nvidia-ctk.service
+
+- name: Enable the nvidia-ctk service
+  ansible.builtin.systemd_service:
+    name: nvidia-ctk
+    enabled: true
+    masked: no

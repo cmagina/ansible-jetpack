@@ -1,0 +1,7 @@
+---
+- name: Flash the Jetsons
+  hosts: flash_hosts
+  become: false
+  gather_facts: true
+  roles:
+    - flash

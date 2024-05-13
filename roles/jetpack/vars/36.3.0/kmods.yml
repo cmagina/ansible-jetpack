@@ -1,0 +1,75 @@
+---
+jetpack_kmod_git_refspec: jetson_36.3
+jetpack_kmod_load_list:
+  - nvidia-modeset
+
+jetpack_kmod_omit_list:
+    - host1x
+    - tegra_drm
+    - nvethernet
+    - nvidia
+    - nvgpu
+
+jetpack_kmod_blacklist:
+    - tegra_camera
+    - nvhost_isp5
+    - nvhost_vi5
+    - nvhost_nvcsi_t194
+    - lt6911uxc
+    - nvethernet
+
+jetpack_kmods_to_remove:
+    - block/tegra_oops_virt_storage/tegra_hv_vblk_oops.ko
+    - block/tegra_virt_storage/tegra_vblk.ko
+    - cpuidle/cpuidle-debugfs.ko
+    - cpuidle/cpuidle-tegra-auto.ko
+    - crypto/tegra-hv-vse-safety.ko
+    - crypto/tegra-nvvse-cryptodev.ko
+    - firmware/tegra/tegra_bpmp.ko
+    - gpio/gpio-max77851.ko
+    - media/platform/tegra/cam_fsync/cam_fsync.ko
+    - media/platform/tegra/camera/tests/sensor_kernel_tests.ko
+    - media/platform/tegra/camera/tests/utils/tegracam_log.ko
+    - media/platform/tegra/cdi/cdi_dev.ko
+    - media/platform/tegra/cdi/cdi_gpio.ko
+    - media/platform/tegra/cdi/cdi_mgr.ko
+    - media/platform/tegra/cdi/cdi_pwm.ko
+    - media/platform/tegra/isc/isc_dev.ko
+    - media/platform/tegra/isc/isc_gpio.ko
+    - media/platform/tegra/isc/isc_mgr.ko
+    - media/platform/tegra/isc/isc_pwm.ko
+    - media/platform/tegra/tpg/nvhost-vi-tpg-t19x.ko
+    - mfd/max77851.ko
+    - misc/bluedroid_pm.ko
+    - misc/ioctl_example.ko
+    - misc/mods/mods.ko
+    - mtd/devices/tegra_hv_mtd.ko
+    - net/ethernet/marvell/oak/oak_pci.ko
+    - nv-virtio/nv-virtio-console-poc.ko
+    - pci/controller/pcie-tegra-vf.ko
+    - pinctrl/pinctrl-max77851.ko
+    - pinctrl/pinctrl-tegra194-pexclk-padctrl.ko
+    - pinctrl/pinctrl-tegra234-dpaux.ko
+    - platform/tegra/aon/tegra-aon-ivc-echo.ko
+    - platform/tegra/aon/tegra234-aon.ko
+    - platform/tegra/psc/tegra23x_psc.ko
+    - platform/tegra/tegra-bootloader-debug.ko
+    - platform/tegra/tegra-uss-io-proxy.ko
+    - power/reset/max77851-poweroff.ko
+    - ras/arm64-ras.ko
+    - regulator/max77851-regulator.ko
+    - rtc/rtc-max77851.ko
+    - soc/tegra/fuse/kfuse.ko
+    - spi/spi-aurix-tegra.ko
+    - thermal/max77851_thermal.ko
+    - thermal/pex9749-thermal.ko
+    - video/tegra/dc/bridge/maxim_gmsl_hdmi_serializer.ko
+    - video/tegra/virt/tegra_gr_comm.ko
+    - virt/tegra/hvc_sysfs.ko
+    - virt/tegra/ivc-cdev.ko
+    - virt/tegra/tegra_hv_pm_ctl.ko
+    - virt/tegra/tegra_hv_vcpu_yield.ko
+    - virt/tegra/userspace_ivc_mempool.ko
+    - watchdog/max77851_wdt.ko
+    - watchdog/softdog-platform.ko
+    - watchdog/watchdog-tegra-t18x.ko

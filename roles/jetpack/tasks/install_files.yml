@@ -1,0 +1,19 @@
+---
+- name: Create destination directory {{ file_glob.dest | dirname }}
+  ansible.builtin.file:
+    path: "{{ file_glob.dest | dirname }}"
+    state: directory
+
+- name: Find file(s) {{ file_glob.src }}
+  ansible.builtin.find:
+    paths: "{{ jetpack_work_path }}/{{ package }}/{{ file_glob.src | dirname }}"
+    patterns: "{{ file_glob.src | basename }}"
+  register: to_install
+
+- name: Install file(s) {{ file_glob.src }}
+  ansible.builtin.copy:
+    src: "{{ item.path }}"
+    dest: "{{ file_glob.dest }}"
+    mode: "{{ file_glob.mode | default('0644') }}"
+    remote_src: true
+  loop: "{{ to_install.files }}"

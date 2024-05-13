@@ -1,0 +1,32 @@
+---
+- name: Register RHEL subscription and auto-subscribe to available content.
+  community.general.redhat_subscription:
+    state: present
+    username: "{{ rhsm_username }}"
+    password: "{{ rhsm_password }}"
+    auto_attach: true
+  when:
+    - rhsm_username is defined
+    - rhsm_password is defined
+
+- name: Build and install the kernel modules
+  ansible.builtin.include_tasks:
+    file: kmods.yml
+  when:
+    - install_jetpack_kmods
+
+- name: Install the userspace components
+  ansible.builtin.include_tasks:
+    file: userspace.yml
+  when:
+    - install_jetpack_userspace
+
+- name: Install the NVIDIA container toolkit
+  ansible.builtin.include_tasks:
+    file: container.yml
+  when:
+    install_nvidia_container_toolkit
+
+- name: Reboot the Jetson
+  ansible.builtin.reboot:
+    msg: "Rebooting jetson in 5 seconds"

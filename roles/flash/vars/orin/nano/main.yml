@@ -1,0 +1,5 @@
+---
+jetpack_flash:
+  boot:
+    target_board: p3768-0000-p3767-0000-a0-qspi
+    rootdev: external

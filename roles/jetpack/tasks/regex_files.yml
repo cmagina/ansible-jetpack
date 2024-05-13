@@ -1,0 +1,16 @@
+---
+- name: Replace line in file {{ item.path }}
+  ansible.builtin.replace:
+    path: "{{ item.path }}"
+    regexp: "{{ item.regex }}"
+    replace: "{{ item.replace }}"
+  when: item.replace is defined
+
+- name: Remove line in file {{ item.path }}
+  ansible.builtin.lineinfile:
+    path: "{{ item.path }}"
+    regex: "{{ item.regex }}"
+    state: absent
+  when:
+    - item.state is defined
+    - item.state == "absent"

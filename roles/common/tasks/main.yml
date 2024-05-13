@@ -1,0 +1,6 @@
+---
+- name: Include vars for the jetpack_software_version
+  ansible.builtin.include_vars:
+    dir: "vars"
+    files_matching: "{{ jetpack_software_version }}.yml"
+    name: jetpack_cfg

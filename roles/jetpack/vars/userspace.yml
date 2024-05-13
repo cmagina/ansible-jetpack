@@ -1,0 +1,23 @@
+---
+jetpack_userspace_deps:
+  build:
+    - xz
+    - zstd
+  system:
+    - bc
+    - expat
+    - glib2
+    - gstreamer1-plugins-base-tools
+    - harfbuzz
+    - libffi
+    - libgcc
+    - libXdmcp
+    - openssl
+    - vulkan-loader
+
+jetpack_userspace_system_users:
+  - gdm
+
+jetpack_userspace_repo_url:
+  head: https://repo.download.nvidia.com/jetson
+  tail: pool/main/n

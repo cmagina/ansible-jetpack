@@ -1,0 +1,136 @@
+---
+- name: Include common vars for kmods
+  ansible.builtin.include_vars:
+    dir: "vars/"
+    files_matching: "kmods.yml"
+
+- name: Include vars for the jetpack_software_version for kmods
+  ansible.builtin.include_vars:
+    dir: "vars/{{ jetpack_software_version }}"
+    files_matching: "kmods.yml"
+
+- name: Install kmod build dependencies
+  become: true
+  ansible.builtin.dnf:
+    name: "{{ jetpack_kmod_build_deps }}"
+    state: present
+  when:
+    - ansible_distribution == 'RedHat'
+    - ansible_facts.pkg_mgr == 'dnf'
+
+- name: Check for kernel build directory
+  ansible.builtin.stat:
+    path: "/usr/src/kernels/{{ ansible_kernel }}/"
+  register: kernel_build_path
+
+- name: Update the kernel and reboot
+  become: true
+  block:
+    - name: Update the kernel
+      ansible.builtin.dnf:
+        name: kernel
+        state: latest
+
+    - name: Reboot the Jetson
+      ansible.builtin.reboot:
+        msg: "Rebooting jetson in 5 seconds"
+
+    - name: Update facts
+      setup:
+  when:
+    - ansible_distribution == 'RedHat'
+    - ansible_facts.pkg_mgr == 'dnf'
+    - not kernel_build_path.stat.exists
+
+- name: "Create a kernel source directory"
+  ansible.builtin.file:
+    path: "{{ jetpack_kmod_src_path }}/kernel"
+    state: directory
+    mode: "0750"
+
+- name: Extracting the kmod build Makefile from the jetpack driver package
+  ansible.builtin.unarchive:
+    src: "{{ jetpack_cfg.driver_package }}"
+    dest: "{{ jetpack_kmod_src_path }}/kernel/"
+    creates: "{{ jetpack_kmod_src_path }}/kernel/Makefile"
+    extra_opts:
+      - --strip-components=2
+    remote_src: true
+    include:
+      - Linux_for_Tegra/source/Makefile
+
+- name: Download the nvidia kmod source
+  ansible.builtin.git:
+    repo: "{{ item.url }}"
+    dest: "{{ jetpack_kmod_src_path }}/kernel/{{ item.path }}"
+    version: "{{ jetpack_kmod_git_refspec }}"
+    depth: 1
+  loop: "{{ jetpack_kmod_git_repos }}"
+
+- name: Create a symbolic link for nvethernetrm in nvidia-oot
+  when:
+    - build_jetpack_nvethernetrm
+  block:
+    - name: Remove nvethernetrm directory from nvidia-oot
+      ansible.builtin.file:
+        path: "{{ jetpack_kmod_src_path }}/kernel/nvidia-oot/drivers/net/ethernet/nvidia/nvethernet/nvethernetrm"
+        state: absent
+
+    - name: Create a symbolic link for nvethernetrm in nvidia-oot
+      ansible.builtin.file:
+        src: "{{ jetpack_kmod_src_path }}/kernel/nvethernetrm"
+        dest: "{{ jetpack_kmod_src_path }}/kernel/nvidia-oot/drivers/net/ethernet/nvidia/nvethernet/nvethernetrm"
+        state: link
+
+- name: Build and install the nvidia jetpack kmods for kernel {{ ansible_kernel }}
+  when:
+    - build_jetpack_kmods
+  block:
+  - name: Build the nvidia jetpack kmods 
+    community.general.make:
+      target: modules
+      chdir: "{{ jetpack_kmod_src_path }}/kernel"
+      jobs: "{{ ansible_processor_nproc }}"
+    environment:
+      KDIR: "/usr/src/kernels/{{ ansible_kernel }}/"
+      KERNEL_HEADERS: "/usr/src/kernels/{{ ansible_kernel }}/"
+
+  - name: Install the nvidia jetpack kmods for kernel {{ ansible_kernel }}
+    community.general.make:
+      target: modules_install
+      chdir: "{{ jetpack_kmod_src_path }}/kernel"
+      jobs: "{{ ansible_processor_nproc }}"
+    environment:
+      KDIR: "/usr/src/kernels/{{ ansible_kernel }}/"
+      KERNEL_HEADERS: "/usr/src/kernels/{{ ansible_kernel }}/"
+    when:
+    - install_jetpack_kmods
+
+- name: Remove uneccessary nvidia jetpack kmods for kernel {{ ansible_kernel }}
+  ansible.builtin.file:
+    path: "/lib/modules/{{ ansible_kernel }}/extra/drivers/{{ item }}"
+    state: absent
+  loop: "{{ jetpack_kmods_to_remove }}"
+
+- name: Create a module blacklist
+  ansible.builtin.template:
+    src: templates/modprobe-blacklist.j2
+    dest: "{{ jetpack_kmod_confs.modprobe_blacklist }}"
+
+- name: Create a config for what modules should be loaded at boot
+  ansible.builtin.template:
+    src: templates/modules-load.j2
+    dest: "{{ jetpack_kmod_confs.modules_load }}"
+
+- name: Create a config to omit kmods from dracut
+  ansible.builtin.template:
+    src: templates/dracut-omit.j2
+    dest: "{{ jetpack_kmod_confs.dracut_omit }}"
+
+- name: Updating depmod for the kernel {{ ansible_kernel }}
+  ansible.builtin.command:
+    cmd: /usr/sbin/depmod {{ ansible_kernel }}
+
+- name: Update the initrd for the kernel {{ ansible_kernel }}
+  ansible.builtin.command:
+    cmd: dracut -f --kver {{ ansible_kernel }}
