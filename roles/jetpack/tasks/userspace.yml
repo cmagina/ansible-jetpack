@@ -15,7 +15,6 @@
     name: "{{ jetpack_userspace_deps.build }}"
     state: present
   when:
-    - ansible_distribution == 'RedHat'
     - ansible_facts.pkg_mgr == 'dnf'
 
 - name: Setting the jetpack work directory path
@@ -50,7 +49,6 @@
     name: "{{ jetpack_userspace_deps.system }}"
     state: present
   when:
-    - ansible_distribution == 'RedHat'
     - ansible_facts.pkg_mgr == 'dnf'
 
 - name: Update library cache

@@ -8,7 +8,7 @@ files:
   - src: usr/lib/aarch64-linux-gnu/nvidia/*.so*
     dest: /usr/lib64/nvidia/
   - src: usr/share/doc/nvidia-tegra/LICENSE.vulkan-sc-*.gz
-    dest: usr/share/doc/nvidia-tegra/
+    dest: /usr/share/doc/nvidia-tegra/
   - src: usr/src/nvidia/vulkan-sc/vulkan-sc-ecosystem/vulkan-sc-layers/json_generation_layers/README.txt
     dest: /usr/src/nvidia/vulkan-sc/vulkan-sc-ecosystem/vulkan-sc-layers/json_generation_layers/README.txt
   - src: usr/src/nvidia/vulkan-sc/vulkan-sc-ecosystem/vulkan-sc-layers/validation_layers/ReadMe.txt

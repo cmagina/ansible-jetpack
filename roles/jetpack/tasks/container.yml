@@ -16,7 +16,6 @@
       - nvidia-container-toolkit-base
     state: present
   when:
-    - ansible_distribution == 'RedHat'
     - ansible_facts.pkg_mgr == 'dnf'
 
 - name: Create the container device interface storage directory

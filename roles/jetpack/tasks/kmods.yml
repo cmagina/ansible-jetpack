@@ -15,7 +15,6 @@
     name: "{{ jetpack_kmod_build_deps }}"
     state: present
   when:
-    - ansible_distribution == 'RedHat'
     - ansible_facts.pkg_mgr == 'dnf'
 
 - name: Check for kernel build directory
@@ -38,7 +37,6 @@
     - name: Update facts
       setup:
   when:
-    - ansible_distribution == 'RedHat'
     - ansible_facts.pkg_mgr == 'dnf'
     - not kernel_build_path.stat.exists
 

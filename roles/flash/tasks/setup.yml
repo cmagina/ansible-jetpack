@@ -23,6 +23,19 @@
     - ansible_distribution == 'Fedora'
     - ansible_facts.pkg_mgr == 'dnf'
 
+- name: Install flash dependencies - RHEL
+  become: true
+  ansible.builtin.dnf:
+    name:
+      - binutils
+      - dtc
+      - lz4
+      - usbutils
+    state: present
+  when:
+    - ansible_distribution == 'RedHat'
+    - ansible_facts.pkg_mgr == 'dnf'
+
 - name: Install flash dependencies - Ubuntu
   become: true
   ansible.builtin.apt:

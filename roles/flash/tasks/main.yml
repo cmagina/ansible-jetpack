@@ -8,7 +8,7 @@
 
     - name: Include vars for the platform submodule
       ansible.builtin.include_vars:
-        dirs: "{{ jetpack_platform }}/{{ jetpack_platform_module }}"
+        dir: "{{ jetpack_platform }}/{{ jetpack_platform_module }}"
         files_matching: "{{ jetpack_platform_module_type }}.yml"
       when:
         - jetpack_platform_module_type is defined

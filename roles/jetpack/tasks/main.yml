@@ -8,6 +8,7 @@
   when:
     - rhsm_username is defined
     - rhsm_password is defined
+    - ansible_distribution == 'RedHat'
 
 - name: Build and install the kernel modules
   ansible.builtin.include_tasks:
