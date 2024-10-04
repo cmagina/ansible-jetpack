@@ -1,0 +1,9 @@
+---
+repo_url:
+  platform: t234
+
+directories:
+  - src: lib/firmware/
+    dest: /lib/firmware/
+  - src: usr/share/doc/nvidia-tegra/
+    dest: /usr/share/doc/nvidia-tegra/

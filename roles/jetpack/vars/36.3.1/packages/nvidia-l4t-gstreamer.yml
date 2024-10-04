@@ -1,0 +1,46 @@
+---
+repo_url:
+  platform: common
+
+files:
+  - src: usr/bin/nvgstcapture-1.0
+    dest: /usr/bin/nvgstcapture-1.0
+    mode: '0750'
+  - src: usr/bin/nvgstipctestapp-1.0
+    dest: /usr/bin/nvgstipctestapp-1.0
+    mode: '0750'
+  - src: usr/bin/nvgstplayer-1.0
+    dest: /usr/bin/nvgstplayer-1.0
+    mode: '0750'
+  - src: usr/lib/aarch64-linux-gnu/gstreamer-1.0/libgstnv*.so
+    dest: /usr/lib64/gstreamer-1.0/
+  - src: usr/lib/aarch64-linux-gnu/gstreamer-1.0/nvgstcapture-1.0_README.txt
+    dest: /usr/lib64/gstreamer-1.0/nvgstcapture-1.0_README.txt
+  - src: usr/lib/aarch64-linux-gnu/gstreamer-1.0/nvgstipctestapp-1.0_README.txt
+    dest: /usr/lib64/gstreamer-1.0/nvgstipctestapp-1.0_README.txt
+  - src: usr/lib/aarch64-linux-gnu/gstreamer-1.0/nvgstplayer-1.0_README.txt
+    dest: /usr/lib64/gstreamer-1.0/nvgstplayer-1.0_README.txt
+  - src: usr/lib/aarch64-linux-gnu/libgstnv*.so*
+    dest: /usr/lib64/
+  - src: usr/lib/aarch64-linux-gnu/libnvsample_cudaprocess.so
+    dest: /usr/lib64/libnvsample_cudaprocess.so
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libgstnvcustomhelper.so.1.0.0
+    dest: /usr/lib64/nvidia/libgstnvcustomhelper.so.1.0.0
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libgstnvdsseimeta.so.1.0.0
+    dest: /usr/lib64/nvidia/libgstnvdsseimeta.so.1.0.0
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libnveglstreamproducer.so
+    dest: /usr/lib64/nvidia/libnveglstreamproducer.so
+  - src: usr/share/doc/nvidia-tegra/LICENSE.*
+    dest: /usr/share/doc/nvidia-tegra/
+
+symlinks:
+  - target: /usr/bin/nvgstcapture-1.0
+    link: /usr/bin/nvgstcapture
+  - target: /usr/bin/nvgstipctestapp-1.0
+    link: /usr/bin/nvgstipctestapp
+  - target: /usr/bin/nvgstplayer-1.0
+    link: /usr/bin/nvgstplayer
+  - target: /usr/lib64/nvidia/libgstnvcustomhelper.so.1.0.0
+    link: /usr/lib64/nvidia/libgstnvcustomhelper.so
+  - target: /usr/lib64/nvidia/libgstnvdsseimeta.so.1.0.0
+    link: /usr/lib64/nvidia/libgstnvdsseimeta.so

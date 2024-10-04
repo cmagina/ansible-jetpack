@@ -1,0 +1,73 @@
+---
+repo_url:
+  platform: t234
+
+files:
+  - src: etc/asound.conf.tegra-ape
+    dest: /etc/asound.conf.tegra-ape
+  - src: etc/asound.conf.tegra-hda-jetson-agx
+    dest: /etc/asound.conf.tegra-hda-jetson-agx
+  - src: etc/asound.conf.tegra-hda-jetson-xnx
+    dest: /etc/asound.conf.tegra-hda-jetson-xnx
+  - src: etc/nvidia-container-runtime/host-files-for-container.d/devices.csv
+    dest: /etc/nvidia-container-runtime/host-files-for-container.d/devices.csv
+  - src: etc/nvidia-container-runtime/host-files-for-container.d/drivers.csv
+    dest: /etc/nvidia-container-runtime/host-files-for-container.d/drivers.csv
+  - src: etc/nvsciipc.cfg
+    dest: /etc/nvsciipc.cfg
+  - src: etc/sysctl.d/60-nvsciipc.conf
+    dest: /etc/sysctl.d/60-nvsciipc.conf
+  - src: etc/systemd/nv_nvsciipc_init.sh
+    dest: /usr/lib/systemd/nv_nvsciipc_init.sh
+    mode: '0750'
+  - src: etc/systemd/system/nv_nvsciipc_init.service
+    dest: /usr/lib/systemd/system/nv_nvsciipc_init.service
+  - src: etc/systemd/nvpower.sh
+    dest: /usr/lib/systemd/nvpower.sh
+    mode: '0750'
+  - src: etc/systemd/system/nvpower.service
+    dest: /usr/lib/systemd/system/nvpower.service
+  - src: etc/systemd/system.conf.d/watchdog.conf
+    dest: /etc/systemd/system.conf.d/watchdog.conf
+  - src: etc/udev/rules.d/99-tegra-devices.rules
+    dest: /etc/udev/rules.d/99-tegra-devices.rules
+  - src: usr/share/alsa/cards/tegra-ape.conf
+    dest: /usr/share/alsa/cards/tegra-ape.conf
+  - src: usr/share/alsa/cards/tegra-hda.conf
+    dest: /usr/share/alsa/cards/tegra-hda.conf
+  - src: usr/share/alsa/init/postinit/00-tegra.conf
+    dest: /usr/share/alsa/init/postinit/00-tegra.conf
+  - src: usr/share/alsa/init/postinit/01-tegra-rt565x.conf
+    dest: /usr/share/alsa/init/postinit/01-tegra-rt565x.conf
+  - src: usr/share/alsa/init/postinit/02-tegra-rt5640.conf
+    dest: /usr/share/alsa/init/postinit/02-tegra-rt5640.conf
+
+updates:
+  - path: /etc/nvidia-container-runtime/host-files-for-container.d/drivers.csv
+    regex: '(^sym,\s+.*)lib/aarch64-linux-gnu(.*$)'
+    replace: \1lib64\2
+  - path: /etc/nvidia-container-runtime/host-files-for-container.d/drivers.csv
+    regex: (^lib,\s+.*)lib/aarch64-linux-gnu(.*$)
+    replace: \1lib64\2
+  - path: /etc/nvidia-container-runtime/host-files-for-container.d/drivers.csv
+    regex: ^lib,\s+.*libv4l2.so.0$
+    state: absent
+  - path: /etc/nvidia-container-runtime/host-files-for-container.d/drivers.csv
+    regex: ^lib(,\s+.*libv4l2.so.0$)
+    replace: sym\1
+  - path: /etc/nvidia-container-runtime/host-files-for-container.d/drivers.csv
+    regex: (^sym,\s+.*)(libv4l.*999999$)
+    replace: \1nvidia/\2
+  - path: /etc/nvidia-container-runtime/host-files-for-container.d/drivers.csv
+    regex: ^sym,\s+.*lib64\/libvulkan.so.*$
+    state: absent
+  - path: /usr/lib/systemd/system/nv_nvsciipc_init.service
+    regex: (^ExecStart=/bin/sh\s+)/etc/systemd/(nv_nvsciipc_init.sh$)
+    replace: \1/usr/lib/systemd/\2
+  - path: /usr/lib/systemd/system/nvpower.service
+    regex: (^ExecStart=)/etc/systemd/(nvpower.sh$)
+    replace: \1/usr/lib/systemd/\2
+
+services:
+  - nv_nvsciipc_init
+  - nvpower

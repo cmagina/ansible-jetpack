@@ -1,0 +1,9 @@
+---
+repo_url:
+  platform: common
+
+files:
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libnvdla_compiler.so
+    dest: /usr/lib64/nvidia/libnvdla_compiler.so
+  - src: usr/share/doc/nvidia-l4t-dla-compiler/LICENSE.nvdla.gz
+    dest: /usr/share/doc/nvidia-l4t-dla-compiler/LICENSE.nvdla.gz

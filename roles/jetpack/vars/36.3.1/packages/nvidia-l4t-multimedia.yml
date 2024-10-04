@@ -1,0 +1,40 @@
+---
+repo_url:
+  platform: t234
+
+files:
+  - src: usr/bin/nvaudio_opus_app
+    dest: /usr/bin/nvaudio_opus_app
+    mode: '0755'
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libnv*.so*
+    dest: /usr/lib64/nvidia/
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libtegrav4l2.so
+    dest: /usr/lib64/nvidia/libtegrav4l2.so
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libv4l2_nvcuvidvideocodec.so
+    dest: /usr/lib64/nvidia/libv4l2_nvcuvidvideocodec.so
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libv4l2_nvvideocodec.so
+    dest: /usr/lib64/nvidia/libv4l2_nvvideocodec.so
+  - src: usr/share/doc/nvidia-tegra/COPYING.opus
+    dest: /usr/share/doc/nvidia-tegra/COPYING.opus
+  - src: usr/share/doc/nvidia-tegra/LICENSE.*
+    dest: /usr/share/doc/nvidia-tegra/
+
+symlinks:
+  - target: /usr/lib64/nvidia/libv4l2_nvvideocodec.so
+    link: /usr/lib64/libv4l/plugins/nv/libv4l2_nvvideocodec.so
+  - target: /usr/lib64/nvidia/libv4l2_nvcuvidvideocodec.so
+    link: /usr/lib64/libv4l/plugins/nv/libv4l2_nvcuvidvideocodec.so
+  - target: /usr/lib64/nvidia/libnvbufsurftransform.so.1.0.0
+    link: /usr/lib64/nvidia/libnvbufsurftransform.so
+  - target: /usr/lib64/nvidia/libnvdsbufferpool.so.1.0.0
+    link: /usr/lib64/nvidia/libnvdsbufferpool.so
+  - target: /usr/lib64/nvidia/libnvid_mapper.so.1.0.0
+    link: /usr/lib64/nvidia/libnvid_mapper.so
+  - target: /usr/lib64/nvidia/libnvv4l2.so
+    link: /usr/lib64/nvidia/libv4l2.so.0
+  - target: /usr/lib64/nvidia/libnvv4lconvert.so
+    link: /usr/lib64/nvidia/libv4lconvert.so.0
+  - target: /usr/lib64/nvidia/libnvv4l2.so
+    link: /usr/lib64/nvidia/libv4l2.so.0.0.999999
+  - target: /usr/lib64/nvidia/libnvv4lconvert.so
+    link: /usr/lib64/nvidia/libv4lconvert.so.0.0.999999

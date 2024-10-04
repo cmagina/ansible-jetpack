@@ -1,0 +1,13 @@
+---
+repo_url:
+  platform: t234
+
+files:
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libnvidia-egl-wayland.so.1.1.11
+    dest: /usr/lib64/nvidia/libnvidia-egl-wayland.so.1.1.11
+  - src: usr/share/egl/egl_external_platform.d/nvidia_wayland.json
+    dest: /usr/share/egl/egl_external_platform.d/nvidia_wayland.json
+
+symlinks:
+  - target: /usr/lib64/nvidia/libnvidia-egl-wayland.so.1.1.11
+    link: /usr/lib64/nvidia/libnvidia-egl-wayland.so.1

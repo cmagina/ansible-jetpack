@@ -1,0 +1,23 @@
+---
+repo_url:
+  platform: t234
+
+files:
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libnvidia-allocator.so.1
+    dest: /usr/lib64/nvidia/libnvidia-allocator.so.1
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libnvidia-egl-gbm.so.1.1.0
+    dest: /usr/lib64/nvidia/libnvidia-egl-gbm.so.1.1.0
+  - src: usr/share/egl/egl_external_platform.d/nvidia_gbm.json
+    dest: /usr/share/egl/egl_external_platform.d/nvidia_gbm.json
+
+symlinks:
+  - target: /usr/lib64/nvidia/libnvidia-allocator.so.1
+    link: /usr/lib64/nvidia/libnvidia-allocator.so
+  - target: /usr/lib64/nvidia/libnvidia-allocator.so
+    link: /usr/lib64/gbm/tegra_gbm.so
+  - target: /usr/lib64/nvidia/libnvidia-allocator.so
+    link: /usr/lib64/gbm/tegra-udrm_gbm.so
+  - target: /usr/lib64/nvidia/libnvidia-allocator.so
+    link: /usr/lib64/gbm/nvidia-drm_gbm.so
+  - target: /usr/lib64/nvidia/libnvidia-egl-gbm.so.1.1.0
+    link: /usr/lib64/nvidia/libnvidia-egl-gbm.so.1

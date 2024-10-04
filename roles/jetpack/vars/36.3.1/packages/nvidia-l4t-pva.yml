@@ -1,0 +1,7 @@
+---
+repo_url:
+  platform: t234
+
+files:
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libnvpvaintf.so
+    dest: /usr/lib64/nvidia/libnvpvaintf.so
