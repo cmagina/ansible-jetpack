@@ -9,6 +9,12 @@
     dir: "vars/{{ jetpack_software_version }}"
     files_matching: "kmods.yml"
 
+- name: Check for jetpack kmod git refspec override
+  ansible.builtin.set_fact:
+    jetpack_kmod_git_refspec: "{{ jetpack_kmod_git_refspec_override }}"
+  when:
+    - jetpack_kmod_git_refspec_override is defined
+
 - name: Install kmod build dependencies
   become: true
   ansible.builtin.dnf:
@@ -44,7 +50,7 @@
   ansible.builtin.file:
     path: "{{ jetpack_kmod_src_path }}/kernel"
     state: directory
-    mode: "0750"
+    mode: "0755"
 
 - name: Extracting the kmod build Makefile from the jetpack driver package
   ansible.builtin.unarchive:
@@ -63,27 +69,35 @@
     dest: "{{ jetpack_kmod_src_path }}/kernel/{{ item.path }}"
     version: "{{ jetpack_kmod_git_refspec }}"
     depth: 1
+    force: true
   loop: "{{ jetpack_kmod_git_repos }}"
 
 - name: Create a symbolic link for nvethernetrm in nvidia-oot
-  when:
-    - build_jetpack_nvethernetrm
   block:
-    - name: Remove nvethernetrm directory from nvidia-oot
-      ansible.builtin.file:
-        path: "{{ jetpack_kmod_src_path }}/kernel/nvidia-oot/drivers/net/ethernet/nvidia/nvethernet/nvethernetrm"
-        state: absent
+  - name: Remove nvethernetrm directory from nvidia-oot
+    ansible.builtin.file:
+      path: "{{ jetpack_kmod_src_path }}/kernel/nvidia-oot/drivers/net/ethernet/nvidia/nvethernet/nvethernetrm"
+      state: absent
 
-    - name: Create a symbolic link for nvethernetrm in nvidia-oot
-      ansible.builtin.file:
-        src: "{{ jetpack_kmod_src_path }}/kernel/nvethernetrm"
-        dest: "{{ jetpack_kmod_src_path }}/kernel/nvidia-oot/drivers/net/ethernet/nvidia/nvethernet/nvethernetrm"
-        state: link
+  - name: Create a symbolic link for nvethernetrm in nvidia-oot
+    ansible.builtin.file:
+      src: "{{ jetpack_kmod_src_path }}/kernel/nvethernetrm"
+      dest: "{{ jetpack_kmod_src_path }}/kernel/nvidia-oot/drivers/net/ethernet/nvidia/nvethernet/nvethernetrm"
+      state: link
 
 - name: Build and install the nvidia jetpack kmods for kernel {{ ansible_kernel }}
   when:
     - build_jetpack_kmods
   block:
+  - name: Clean the nvidia jetpack kmods
+    community.general.make:
+      target: clean 
+      chdir: "{{ jetpack_kmod_src_path }}/kernel"
+      jobs: "{{ ansible_processor_nproc }}"
+    environment:
+      KDIR: "/usr/src/kernels/{{ ansible_kernel }}/"
+      KERNEL_HEADERS: "/usr/src/kernels/{{ ansible_kernel }}/"
+
   - name: Build the nvidia jetpack kmods 
     community.general.make:
       target: modules

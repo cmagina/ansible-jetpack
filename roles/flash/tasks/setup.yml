@@ -13,6 +13,7 @@
   ansible.builtin.dnf:
     name:
       - binutils
+      - cpp
       - dtc
       - lz4
       - qemu-user-binfmt
@@ -118,3 +119,4 @@
     - jetpack_flash_type == "full"
     - ansible_distribution == "Ubuntu"
     - ansible_distribution_version is version('20.04', '==') or ansible_distribution_version is version('22.04', '==')
+    - "'driver_rootfs' in jetpack_cfg"
