@@ -1,0 +1,21 @@
+---
+- name: Check if system already has a uuid
+  ansible.builtin.shell:
+    cmd: subscription-manager facts | grep -i uuid
+  register: system_uuid
+  changed_when: false
+
+- name: Generate a UUID for RHSM to use
+  ansible.builtin.copy:
+    content: '{"dmi.system.uuid" : "{{ lookup(''pipe'', ''uuidgen'') }}"}'
+    dest: /etc/rhsm/facts/redhat.facts
+    mode: "0644"
+  when:
+    - "system_uuid.stdout == 'dmi.system.uuid: NOT SETTABLE'"
+
+- name: Register the system with Red Hat Subscription Manager
+  community.general.redhat_subscription:
+    state: present
+    username: "{{ rhsm_username }}"
+    password: "{{ rhsm_password }}"
+    auto_attach: true

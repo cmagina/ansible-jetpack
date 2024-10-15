@@ -1,10 +1,7 @@
 ---
-- name: Register RHEL subscription and auto-subscribe to available content.
-  community.general.redhat_subscription:
-    state: present
-    username: "{{ rhsm_username }}"
-    password: "{{ rhsm_password }}"
-    auto_attach: true
+- name: Register RHEL subscription
+  ansible.builtin.include_tasks:
+    file: rhsm.yml
   when:
     - rhsm_username is defined
     - rhsm_password is defined
