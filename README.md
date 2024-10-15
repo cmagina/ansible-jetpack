@@ -20,9 +20,9 @@
 
 #### Software Versions
 
-##### JetPack 6.0
-
-* 36.3.0
+* 36.3.0 (JetPack 6.0)
+* 36.3.1 (IGX SW 1.0)
+* 36.4.0 (JetPack 6.1)
 
 ## Requirements
 
@@ -61,7 +61,7 @@ jetsons:
 all:
   vars:
     ## target jetpack release
-    jetpack_software_release: 36.3.0
+    jetpack_software_release: 36.4.0
 ```
 
 #### flash_hosts
