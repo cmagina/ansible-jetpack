@@ -1,0 +1,41 @@
+---
+repo_url:
+  platform: t234
+
+files:
+  - src: etc/systemd/system/nvargus-daemon.service
+    dest: /usr/lib/systemd/system/nvargus-daemon.service
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libnv*.so
+    dest: /usr/lib64/nvidia/
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libv4l2_nvargus.so
+    dest: /usr/lib64/nvidia/libv4l2_nvargus.so
+  - src: usr/sbin/nvargus-daemon
+    dest: /usr/sbin/nvargus-daemon
+    mode: '0750'
+  - src: usr/sbin/nvargus_nvraw
+    dest: /usr/sbin/nvargus_nvraw
+    mode: '0750'
+  - src: usr/sbin/nvtunerd
+    dest: /usr/sbin/nvtunerd
+    mode: '0750'
+  - src: usr/share/doc/nvidia-tegra/LICENSE.libnvargus
+    dest: /usr/share/doc/nvidia-tegra/LICENSE.libnvargus
+  - src: usr/share/doc/nvidia-tegra/LICENSE.libnvcam_imageencoder
+    dest: /usr/share/doc/nvidia-tegra/LICENSE.libnvcam_imageencoder
+  - src: var/nvidia/nvcam/apps/README.txt
+    dest: /var/nvidia/nvcam/apps/README.txt
+  - src: var/nvidia/nvcam/input/README.txt
+    dest: /var/nvidia/nvcam/input/README.txt
+  - src: var/nvidia/nvcam/input/model_frontal.xml
+    dest: /var/nvidia/nvcam/input/model_frontal.xml
+  - src: var/nvidia/nvcam/output/README.txt
+    dest: /var/nvidia/nvcam/output/README.txt
+  - src: var/nvidia/nvcam/settings/README.txt
+    dest: /var/nvidia/nvcam/settings/README.txt
+
+symlinks:
+  - target: /usr/lib64/nvidia/libnvargus.so
+    link: /usr/lib64/libv4l/plugins/nv/libv4l2_nvargus.so
+
+services:
+  - nvargus-daemon

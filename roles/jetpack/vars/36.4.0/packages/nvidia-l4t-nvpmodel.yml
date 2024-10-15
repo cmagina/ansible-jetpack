@@ -1,0 +1,26 @@
+---
+repo_url:
+  platform: t234
+
+files:
+  - src: etc/nvpmodel/nvpmodel_*.conf
+    dest: /etc/nvpmodel/
+  - src: etc/systemd/nvpmodel.sh
+    dest: /usr/lib/systemd/nvpmodel.sh
+    mode: '0750'
+  - src: etc/systemd/system/nvpmodel.service
+    dest: /usr/lib/systemd/system/nvpmodel.service
+  - src: usr/sbin/nvpmodel
+    dest: /usr/sbin/nvpmodel
+    mode: '0750'
+
+updates:
+  - path: /usr/lib/systemd/system/nvpmodel.service
+    regex: (^.*)/etc/systemd/nvpmodel.sh(.*$)
+    replace: \1/usr/lib/systemd/nvpmodel.sh\2
+  - path: /usr/lib/systemd/system/nvpmodel.service
+    regex: \s*nv.service\s*
+    state: absent
+
+services:
+  - nvpmodel

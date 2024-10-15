@@ -1,0 +1,54 @@
+---
+repo_url:
+  platform: t234
+
+files:
+  - src: etc/nvpower/libjetsonpower/jetsonpower_t194.conf
+    dest: /etc/nvpower/libjetsonpower/jetsonpower_t194.conf
+  - src: etc/nvpower/libjetsonpower/jetsonpower_t234.conf
+    dest: /etc/nvpower/libjetsonpower/jetsonpower_t234.conf
+  - src: usr/bin/jetson_clocks
+    dest: /usr/bin/jetson_clocks
+    mode: '0755'
+  - src: usr/bin/nvsciipc_init
+    dest: /usr/bin/nvsciipc_init
+    mode: '0755'
+  - src: usr/bin/tegrastats
+    dest: /usr/bin/tegrastats
+    mode: '0755'
+  - src: usr/bin/tipc_test
+    dest: /usr/bin/tipc_test
+    mode: '0755'
+  - src: opt/nvidia/camera/nvcapture-status-decoder
+    dest: /opt/nvidia/camera/nvcapture-status-decoder
+    mode: '0755'
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libnvplayfair.so
+    dest: /usr/lib64/nvidia/libnvplayfair.so
+  - src: usr/sbin/nv_bootloader_capsule_updater.sh
+    dest: /usr/sbin/nv_bootloader_capsule_updater.sh
+    mode: '0755'
+  - src: usr/sbin/nv_fuse_read.sh
+    dest: /usr/sbin/nv_fuse_read.sh
+    mode: '0750'
+  - src: usr/sbin/nv_get_dram_info
+    dest: /usr/sbin/nv_get_dram_info
+    mode: '0750'
+  - src: usr/sbin/nv_update_engine
+    dest: /usr/sbin/nv_update_engine
+    mode: '0750'
+  - src: usr/sbin/nvbootctrl
+    dest: /usr/sbin/nvbootctrl
+    mode: '0750'
+  - src: usr/sbin/nvimp_util
+    dest: /usr/sbin/nvimp_util
+    mode: '0750'
+  - src: usr/share/doc/nvidia-tegra/LICENSE.nvbootctrl.gz
+    dest: /usr/share/doc/nvidia-tegra/LICENSE.nvbootctrl.gz
+  - src: usr/share/doc/nvidia-tegra/LICENSE.tipc_test.gz
+    dest: /usr/share/doc/nvidia-tegra/LICENSE.tipc_test.gz
+  - src: usr/share/doc/nvidia-tegra/NVIDIA_Trademark_License_Addendum_SW.pdf.gz
+    dest: /usr/share/doc/nvidia-tegra/NVIDIA_Trademark_License_Addendum_SW.pdf.gz
+
+symlinks:
+  - target: /opt/nvidia/camera/nvcapture-status-decoder
+    link: /usr/bin/nvcapture-status-decoder

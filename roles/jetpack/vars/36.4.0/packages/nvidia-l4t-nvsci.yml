@@ -1,0 +1,27 @@
+---
+repo_url:
+  platform: t234
+
+files:
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libnvscibuf.so.1
+    dest: /usr/lib64/nvidia/libnvscibuf.so.1
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libnvscicommon.so.1
+    dest: /usr/lib64/nvidia/libnvscicommon.so.1
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libnvscievent.so
+    dest: /usr/lib64/nvidia/libnvscievent.so
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libnvscistream.so.1
+    dest: /usr/lib64/nvidia/libnvscistream.so.1
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libnvscisync.so.1
+    dest: /usr/lib64/nvidia/libnvscisync.so.1
+  - src: usr/share/doc/nvidia-tegra/LICENSE.libnvscibuf
+    dest: /usr/share/doc/nvidia-tegra/LICENSE.libnvscibuf
+
+symlinks:
+  - target: /usr/lib64/nvidia/libnvscibuf.so.1
+    link: /usr/lib64/nvidia/libnvscibuf.so
+  - target: /usr/lib64/nvidia/libnvscicommon.so.1
+    link: /usr/lib64/nvidia/libnvscicommon.so
+  - target: /usr/lib64/nvidia/libnvscistream.so.1
+    link: /usr/lib64/nvidia/libnvscistream.so
+  - target: /usr/lib64/nvidia/libnvscisync.so.1
+    link: /usr/lib64/nvidia/libnvscisync.so

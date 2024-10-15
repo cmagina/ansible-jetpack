@@ -1,0 +1,13 @@
+---
+repo_url:
+  platform: t234
+
+files:
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libnvbuf_fdmap.so.1.0.0
+    dest: /usr/lib64/nvidia/libnvbuf_fdmap.so.1.0.0
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libnvbufsurface.so.1.0.0
+    dest: /usr/lib64/nvidia/libnvbufsurface.so.1.0.0
+
+symlinks:
+  - target: /usr/lib64/nvidia/libnvbufsurface.so.1.0.0
+    link: /usr/lib64/nvidia/libnvbufsurface.so

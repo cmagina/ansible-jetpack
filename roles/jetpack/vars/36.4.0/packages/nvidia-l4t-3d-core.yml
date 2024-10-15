@@ -1,0 +1,46 @@
+---
+repo_url:
+  platform: t234
+
+files:
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libGLX_nvidia.so.0
+    dest: /usr/lib64/nvidia/libGLX_nvidia.so.0
+  - src: usr/lib/aarch64-linux-gnu/nvidia/libnvidia-*.so.540.4.0
+    dest: /usr/lib64/nvidia/
+  - src: usr/lib/aarch64-linux-gnu/nvidia/nvidia_icd.json
+    dest: /usr/lib64/nvidia/nvidia_icd.json
+  - src: usr/lib/aarch64-linux-gnu/tegra-egl/ld.so.conf
+    dest: /usr/lib64/tegra-egl/ld.so.conf
+  - src: usr/lib/aarch64-linux-gnu/tegra-egl/libEGL_nvidia.so.0
+    dest: /usr/lib64/tegra-egl/libEGL_nvidia.so.0
+  - src: usr/lib/aarch64-linux-gnu/tegra-egl/libGLESv1_CM_nvidia.so.1
+    dest: /usr/lib64/tegra-egl/libGLESv1_CM_nvidia.so.1
+  - src: usr/lib/aarch64-linux-gnu/tegra-egl/libGLESv2_nvidia.so.2
+    dest: /usr/lib64/tegra-egl/libGLESv2_nvidia.so.2
+  - src: usr/lib/aarch64-linux-gnu/tegra-egl/nvidia.json
+    dest: /usr/lib64/tegra-egl/nvidia.json
+  - src: usr/lib/xorg/modules/drivers/nvidia_drv.so
+    dest: /usr/lib64/xorg/modules/drivers/nvidia_drv.so
+  - src: usr/lib/xorg/modules/extensions/libglxserver_nvidia.so
+    dest: /usr/lib64/xorg/modules/extensions/libglxserver_nvidia.so
+  - src: usr/share/doc/nvidia-tegra/LICENSE.libEGL_nvidia
+    dest: /usr/share/doc/nvidia-tegra/LICENSE.libEGL_nvidia
+  - src: usr/share/doc/nvidia-tegra/LICENSE.libGLX_nvidia-libglxserver_nvidia
+    dest: /usr/share/doc/nvidia-tegra/LICENSE.libGLX_nvidia-libglxserver_nvidia
+  - src: usr/share/doc/nvidia-tegra/LICENSE.libnvidia-rtcore.gz
+    dest: /usr/share/doc/nvidia-tegra/LICENSE.libnvidia-rtcore.gz
+
+symlinks:
+  - target: /usr/lib64/nvidia/libnvidia-nvvm.so.540.4.0
+    link: /usr/lib64/nvidia/libnvidia-nvvm.so.4
+  - target: /usr/lib64/nvidia/libnvidia-ptxjitcompiler.so.540.4.0
+    link: /usr/lib64/nvidia/libnvidia-ptxjitcompiler.so.1
+  - target: /usr/lib64/nvidia/nvidia_icd.json
+    link: /etc/vulkan/icd.d/nvidia_icd.json
+  - target: /usr/lib64/tegra-egl/nvidia.json
+    link: /usr/share/glvnd/egl_vendor.d/10_nvidia.json
+
+updates:
+  - path: /usr/lib64/tegra-egl/ld.so.conf
+    regex: (^.*)lib/aarch64-linux-gnu(.*$)
+    replace: \1lib64\2

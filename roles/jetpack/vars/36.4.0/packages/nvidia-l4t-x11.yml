@@ -1,0 +1,14 @@
+---
+repo_url:
+  platform: t234
+
+files:
+  - src: etc/X11/xorg.conf
+    dest: /etc/X11/xorg.conf
+  - src: etc/X11/xorg.conf.d/tegra-drm-outputclass.conf
+    dest: /etc/X11/xorg.conf.d/tegra-drm-outputclass.conf
+  - src: etc/X11/xorg.conf.t194_ref
+    dest: /etc/X11/xorg.conf.t194_ref
+  - src: usr/bin/nvidia-xconfig
+    dest: /usr/bin/nvidia-xconfig
+    mode: '0755'
